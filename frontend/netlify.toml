@@ -2,6 +2,14 @@
   command = "npm run build"
   publish = "dist"
 
+# Let /api/* pass through to the backend (Railway) – do NOT rewrite to index.html
+[[redirects]]
+  from = "/api/*"
+  to = ":splat"
+  status = 200
+  force = false
+
+# SPA fallback: all other routes → index.html
 [[redirects]]
   from = "/*"
   to = "/index.html"
