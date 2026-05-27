@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+*.egg-info/
+
+# Environment
+.env
+*.env.local
+
+# Backend storage (generated at runtime – not committed)
+backend/storage/
+
+# Frontend build output & dependencies
+frontend/node_modules/
+frontend/dist/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# PDF files in root (source documents, not for the repo)
+*.pdf
+*.pptx
+*.docx
+
+# BUT keep the bundled assets inside backend/assets/
+!backend/assets/Deckblatt.pdf
+!backend/assets/Disclaimer.pdf
+!backend/assets/ProfinalSolar_Logo_RGB.jpg
