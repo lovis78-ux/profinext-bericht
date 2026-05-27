@@ -4,6 +4,7 @@ import profinextLogo from "./assets/ProfiNEXT_Logo_RGB.jpg";
 import UploadSection from "./components/UploadSection";
 import ArchiveTable from "./components/ArchiveTable";
 import ProcessingStatus from "./components/ProcessingStatus";
+import PdfPreviewModal from "./components/PdfPreviewModal";
 import { listReports } from "./services/api";
 import type { Report, UploadResponse } from "./types";
 
@@ -11,6 +12,7 @@ export default function App() {
   const [reports, setReports] = useState<Report[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeJobs, setActiveJobs] = useState<number[]>([]);
+  const [previewReport, setPreviewReport] = useState<Report | null>(null);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const fetchReports = useCallback(async () => {
@@ -57,6 +59,7 @@ export default function App() {
   const handleDeleted = useCallback((id: number) => {
     setReports((prev) => prev.filter((r) => r.id !== id));
     setActiveJobs((prev) => prev.filter((j) => j !== id));
+    setPreviewReport((prev) => (prev?.id === id ? null : prev));
   }, []);
 
   return (
@@ -127,10 +130,25 @@ export default function App() {
               <RefreshCw className="w-6 h-6 text-gray-400 animate-spin" />
             </div>
           ) : (
-            <ArchiveTable reports={reports} onDeleted={handleDeleted} />
+            <ArchiveTable
+              reports={reports}
+              onDeleted={handleDeleted}
+              onPreview={(r) =>
+                setPreviewReport((prev) => (prev?.id === r.id ? null : r))
+              }
+              previewId={previewReport?.id ?? null}
+            />
           )}
         </section>
       </main>
+
+      {/* PDF-Vorschau Modal */}
+      {previewReport && (
+        <PdfPreviewModal
+          report={previewReport}
+          onClose={() => setPreviewReport(null)}
+        />
+      )}
     </div>
   );
 }

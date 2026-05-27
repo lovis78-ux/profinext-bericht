@@ -48,3 +48,7 @@ export function downloadOriginalUrl(id: number): string {
 export function downloadOptimizedUrl(id: number): string {
   return `${BASE}/api/reports/${id}/download/optimized`;
 }
+
+export function viewOptimizedUrl(id: number): string {
+  return `${BASE}/api/reports/${id}/view/optimized`;
+}

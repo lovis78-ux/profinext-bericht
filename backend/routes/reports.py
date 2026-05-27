@@ -65,6 +65,22 @@ async def download_optimized(report_id: int, db: AsyncSession = Depends(get_db))
     )
 
 
+@router.get("/reports/{report_id}/view/optimized")
+async def view_optimized(report_id: int, db: AsyncSession = Depends(get_db)):
+    """Serve the optimised PDF inline (for browser preview / iframe)."""
+    report = await _get_or_404(db, report_id)
+    if report.status != "done":
+        raise HTTPException(status_code=400, detail="Verarbeitung noch nicht abgeschlossen.")
+    path = Path(report.optimized_path)
+    if not path.exists():
+        raise HTTPException(status_code=404, detail="Optimierte Datei nicht gefunden.")
+    return FileResponse(
+        path=str(path),
+        media_type="application/pdf",
+        headers={"Content-Disposition": "inline"},
+    )
+
+
 @router.delete("/reports/{report_id}")
 async def delete_report(report_id: int, db: AsyncSession = Depends(get_db)):
     report = await _get_or_404(db, report_id)
